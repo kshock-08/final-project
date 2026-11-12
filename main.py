@@ -1,4 +1,6 @@
+
 from dataclasses import dataclass
+from typing import Any
 from drafter import *
 
 # Website information
@@ -134,7 +136,6 @@ def show_results(
     equipment: str = ""
 ) -> Page:
 
-    # Preserve previous selections when returning to results
     if muscle == "":
         muscle = state.selected_muscle
 
@@ -144,7 +145,7 @@ def show_results(
     state.selected_muscle = muscle
     state.selected_equipment = equipment
 
-    results = []
+    results: list[WorkoutRoutine] = []
 
     for routine in state.database:
         if routine.muscle_group == muscle:
@@ -155,7 +156,7 @@ def show_results(
 
     state.search_results = results
 
-    content = [
+    content: list[Any] = [
         Header("Matching Routines")
     ]
 
@@ -169,7 +170,7 @@ def show_results(
                 Button(
                     "View Routine",
                     "view_routine",
-                    [Argument("routine_index", index)]
+                    {"routine_index": index}
                 )
             )
 
@@ -186,7 +187,7 @@ def view_routine(state: State, routine_index: int) -> Page:
 
     routine = state.search_results[routine_index]
 
-    content = [
+    content: list[Any] = [
         Header("Routine Details"),
         Text(routine.name),
         Text(routine.description),
@@ -208,7 +209,7 @@ def view_routine(state: State, routine_index: int) -> Page:
         Button(
             "Save Routine",
             "save_routine",
-            [Argument("routine_index", routine_index)]
+            {"routine_index": routine_index}
         )
     )
 
@@ -234,7 +235,7 @@ def save_routine(state: State, routine_index: int) -> Page:
 @route
 def view_saved_routines(state: State) -> Page:
 
-    content = [
+    content: list[Any] = [
         Header("Saved Routines")
     ]
 
@@ -249,7 +250,7 @@ def view_saved_routines(state: State) -> Page:
                 Button(
                     "Remove Routine",
                     "remove_routine",
-                    [Argument("routine_index", index)]
+                    {"routine_index": index}
                 )
             )
 
@@ -289,6 +290,7 @@ initial_state = State(
 )
 
 start_server(initial_state)
+
 
 
 
